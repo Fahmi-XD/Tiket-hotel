@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konfirmasi Booking - LuxStay</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .confirmation-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .success-animation {
+            animation: successPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes successPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .booking-code {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+        }
+
+        .step-indicator {
+            transition: all 0.3s ease;
+        }
+        
+        .step-indicator.active {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #000;
+        }
+        
+        .step-indicator.completed {
+            background: #10b981;
+            color: #fff;
+        }
+        
+        .qr-code {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+                font-size: 12px;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            .print-only {
+                display: block !important;
+            }
+            
+            .confirmation-card {
+                background: white !important;
+                border: 1px solid #ccc !important;
+                box-shadow: none !important;
+                backdrop-filter: none !important;
+            }
+            
+            .gradient-text, .booking-code {
+                color: #000 !important;
+                background: none !important;
+                -webkit-text-fill-color: initial !important;
+            }
+            
+            .text-white {
+                color: black !important;
+            }
+            
+            .text-gray-300, .text-gray-400 {
+                color: #666 !important;
+            }
+            
+            .text-yellow-400, .text-green-400 {
+                color: #000 !important;
+            }
+            
+            .bg-black, .bg-gray-800, .bg-gray-900 {
+                background: white !important;
+            }
+            
+            .border-gray-700, .border-gray-600 {
+                border-color: #ccc !important;
+            }
+            
+            .receipt-format {
+                max-width: 300px;
+                margin: 0 auto;
+                font-family: 'Courier New', monospace;
+                font-size: 11px;
+                line-height: 1.2;
+            }
+            
+            .receipt-header {
+                text-align: center;
+                border-bottom: 2px dashed #000;
+                padding-bottom: 10px;
+                margin-bottom: 10px;
+            }
+            
+            .receipt-section {
+                margin-bottom: 15px;
+                padding-bottom: 10px;
+                border-bottom: 1px dashed #ccc;
+            }
+            
+            .receipt-row {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 2px;
+            }
+            
+            .receipt-total {
+                border-top: 2px solid #000;
+                padding-top: 5px;
+                font-weight: bold;
+            }
+        }
+        
+        .print-only {
+            display: none;
+        }
+        
+        .status-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="bg-black text-white min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-black/80 backdrop-blur-md border-b border-gray-800 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold gradient-text">LuxStay</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button 
+                        onclick="printBooking()" 
+                        class="bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                        </svg>
+                        <span>Print</span>
+                    </button>
+                    <button 
+                        onclick="goHome()" 
+                        class="text-gray-300 hover:text-yellow-400 px-4 py-2 rounded-lg transition-colors"
+                    >
+                        Beranda
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Success Header -->
+         <div class="mb-8">
+            <div class="flex items-center justify-center space-x-4 mb-4">
+                <div class="step-indicator completed w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold">
+                    ✓
+                </div>
+                <div class="w-20 h-1 bg-green-500"></div>
+                <div class="step-indicator completed w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold">
+                    ✓
+                </div>
+                <div class="w-20 h-1 bg-green-500"></div>
+                <div class="step-indicator active w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-sm font-semibold">
+                    3
+                </div>
+            </div>
+            <div class="flex justify-center space-x-8 text-sm">
+                <span class="text-green-400">Pilih Hotel</span>
+                <span class="text-green-400 font-medium">Konfirmasi & Pembayaran</span>
+                <span class="text-yellow-400">Selesai</span>
+            </div>
+        </div>
+        <div class="text-center mb-8 no-print">
+            <h1 class="text-3xl font-bold mb-2">Pemesanan Berhasil!</h1>
+            <p class="text-gray-300">Terima kasih telah mempercayai LuxStay untuk pengalaman menginap Anda</p>
+        </div>
+
+        <!-- Print Receipt Format (Hidden on screen, shown when printing) -->
+        <div class="print-only receipt-format">
+            <div class="receipt-header">
+                <div style="font-size: 16px; font-weight: bold;">LUXSTAY HOTEL</div>
+                <div>Jl. Sudirman No. 123</div>
+                <div>Jakarta Pusat 10220</div>
+                <div>Tel: (021) 1234-5678</div>
+                <div style="margin-top: 10px;">BUKTI PEMESANAN</div>
+            </div>
+            
+            <div class="receipt-section">
+                <div style="text-align: center; font-weight: bold; font-size: 14px;">
+                    BOOKING CODE: LX2024001234
+                </div>
+                <div style="text-align: center;">
+                    Tanggal: <span id="print-date"></span>
+                </div>
+            </div>
+            
+            <div class="receipt-section">
+                <div style="font-weight: bold;">DETAIL TAMU:</div>
+                <div>Nama: Ahmad Rizki Pratama</div>
+                <div>Email: ahmad.rizki@email.com</div>
+                <div>Telepon: +62 812 3456 7890</div>
+                <div>ID: KTP - 3171234567890123</div>
+            </div>
+            
+            <div class="receipt-section">
+                <div style="font-weight: bold;">DETAIL HOTEL:</div>
+                <div>Grand Luxury Hotel</div>
+                <div>Jakarta Pusat</div>
+                <div>Rating: ★★★★★ (4.9)</div>
+            </div>
+            
+            <div class="receipt-section">
+                <div style="font-weight: bold;">DETAIL KAMAR:</div>
+                <div>Tipe: Deluxe Room</div>
+                <div>Check-in: 15 Des 2024, 14:00</div>
+                <div>Check-out: 18 Des 2024, 12:00</div>
+                <div>Durasi: 3 Malam</div>
+                <div>Tamu: 2 Dewasa</div>
+            </div>
+            
+            <div class="receipt-section">
+                <div style="font-weight: bold;">RINCIAN BIAYA:</div>
+                <div class="receipt-row">
+                    <span>Kamar (3 malam)</span>
+                    <span>3,750,000</span>
+                </div>
+                <div class="receipt-row">
+                    <span>Airport Transfer</span>
+                    <span>350,000</span>
+                </div>
+                <div class="receipt-row">
+                    <span>Breakfast Package</span>
+                    <span>900,000</span>
+                </div>
+                <div class="receipt-row">
+                    <span>Pajak & Biaya</span>
+                    <span>750,000</span>
+                </div>
+                <div class="receipt-row receipt-total">
+                    <span>TOTAL BAYAR</span>
+                    <span>Rp 5,750,000</span>
+                </div>
+            </div>
+            
+            <div class="receipt-section">
+                <div style="font-weight: bold;">PEMBAYARAN:</div>
+                <div>Metode: Kartu Kredit</div>
+                <div>Status: LUNAS</div>
+                <div>Ref: TXN-2024-001234</div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 15px; font-size: 10px;">
+                <div>Terima kasih atas kepercayaan Anda</div>
+                <div>Simpan bukti ini sebagai konfirmasi</div>
+                <div style="margin-top: 10px;">
+                    ================================
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Booking Confirmation (Screen View) -->
+        <div class="no-print">
+            <!-- Booking Code Section -->
+            <div class="confirmation-card rounded-2xl p-8 mb-8 text-center">
+                <h2 class="text-2xl font-bold mb-4">Kode Booking Anda</h2>
+                <div class="booking-code text-4xl md:text-6xl font-bold mb-4">
+                    LX2024001234
+                </div>
+                <p class="text-gray-300 mb-6">Simpan kode ini untuk check-in dan referensi pemesanan</p>
+                
+                <!-- QR Code -->
+                <div class="flex justify-center mb-6">
+                    <div class="qr-code">
+                        <svg width="120" height="120" viewBox="0 0 120 120">
+                            <!-- Simple QR Code representation -->
+                            <rect width="120" height="120" fill="white"/>
+                            <g fill="black">
+                                <!-- Corner squares -->
+                                <rect x="0" y="0" width="30" height="30"/>
+                                <rect x="90" y="0" width="30" height="30"/>
+                                <rect x="0" y="90" width="30" height="30"/>
+                                <!-- Inner squares -->
+                                <rect x="6" y="6" width="18" height="18" fill="white"/>
+                                <rect x="96" y="6" width="18" height="18" fill="white"/>
+                                <rect x="6" y="96" width="18" height="18" fill="white"/>
+                                <rect x="12" y="12" width="6" height="6"/>
+                                <rect x="102" y="12" width="6" height="6"/>
+                                <rect x="12" y="102" width="6" height="6"/>
+                                <!-- Data pattern -->
+                                <rect x="36" y="6" width="6" height="6"/>
+                                <rect x="48" y="6" width="6" height="6"/>
+                                <rect x="60" y="6" width="6" height="6"/>
+                                <rect x="72" y="6" width="6" height="6"/>
+                                <rect x="36" y="18" width="6" height="6"/>
+                                <rect x="60" y="18" width="6" height="6"/>
+                                <rect x="84" y="18" width="6" height="6"/>
+                                <!-- More pattern elements -->
+                                <rect x="36" y="36" width="48" height="6"/>
+                                <rect x="36" y="48" width="6" height="6"/>
+                                <rect x="48" y="48" width="6" height="6"/>
+                                <rect x="72" y="48" width="12" height="6"/>
+                                <rect x="36" y="60" width="18" height="6"/>
+                                <rect x="66" y="60" width="18" height="6"/>
+                                <rect x="36" y="72" width="48" height="6"/>
+                                <rect x="36" y="84" width="6" height="6"/>
+                                <rect x="48" y="84" width="6" height="6"/>
+                                <rect x="60" y="84" width="6" height="6"/>
+                                <rect x="72" y="84" width="6" height="6"/>
+                                <rect x="84" y="84" width="6" height="6"/>
+                                <rect x="36" y="96" width="6" height="6"/>
+                                <rect x="48" y="96" width="6" height="6"/>
+                                <rect x="72" y="96" width="12" height="6"/>
+                                <rect x="36" y="108" width="6" height="6"/>
+                                <rect x="60" y="108" width="6" height="6"/>
+                                <rect x="84" y="108" width="6" height="6"/>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="status-badge">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    PEMBAYARAN BERHASIL
+                </div>
+            </div>
+
+            <!-- Booking Details -->
+            <div class="space-y-8">
+                <!-- Guest Information -->
+                <div class="confirmation-card rounded-2xl p-6">
+                    <h3 class="text-xl font-bold mb-6 flex items-center">
+                        <svg class="w-6 h-6 mr-3 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        Informasi Tamu
+                    </h3>
+                    
+                    <div class="info-grid">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-sm text-gray-400">Tamu Utama</label>
+                                <div class="text-lg font-semibold">Ahmad Rizki Pratama</div>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-400">Email</label>
+                                <div class="text-lg">ahmad.rizki@email.com</div>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-400">Nomor Telepon</label>
+                                <div class="text-lg">+62 812 3456 7890</div>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-sm text-gray-400">Identitas</label>
+                                <div class="text-lg">KTP - 3171234567890123</div>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-400">Jumlah Tamu</label>
+                                <div class="text-lg">2 Dewasa</div>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-400">Tanggal Pemesanan</label>
+                                <div class="text-lg" id="booking-date"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hotel & Room Details -->
+                <div class="confirmation-card rounded-2xl p-6">
+                    <h3 class="text-xl font-bold mb-6 flex items-center">
+                        <svg class="w-6 h-6 mr-3 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                        Detail Hotel & Kamar
+                    </h3>
+                    
+                    <div class="flex items-start space-x-6 mb-6">
+                        <div class="w-32 h-24 bg-gradient-to-br from-yellow-500/30 to-orange-500/30 rounded-lg flex items-center justify-center">
+                            <span class="text-4xl">🏨</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-2xl font-bold mb-2">Grand Luxury Hotel</h4>
+                            <p class="text-gray-300 mb-2">📍 Jl. Sudirman No. 123, Jakarta Pusat</p>
+                            <div class="flex items-center mb-3">
+                                <div class="text-yellow-400 flex text-lg">★★★★★</div>
+                                <span class="text-gray-300 ml-2">(4.9) • 1,247 ulasan</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-gray-700 px-3 py-1 rounded-full text-sm">WiFi Gratis</span>
+                                <span class="bg-gray-700 px-3 py-1 rounded-full text-sm">Kolam Renang</span>
+                                <span class="bg-gray-700 px-3 py-1 rounded-full text-sm">Spa</span>
+                                <span class="bg-gray-700 px-3 py-1 rounded-full text-sm">Gym</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-grid">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-sm text-gray-400">Tipe Kamar</label>
+                                <div class="text-lg font-semibold">Deluxe Room</div>
+                                <div class="text-sm text-gray-300">32m² • King Bed • City View</div>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-400">Check-in</label>
+                                <div class="text-lg">15 Desember 2024</div>
+                                <div class="text-sm text-gray-300">Mulai pukul 14:00</div>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-sm text-gray-400">Durasi Menginap</label>
+                                <div class="text-lg font-semibold">3 Malam</div>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-400">Check-out</label>
+                                <div class="text-lg">18 Desember 2024</div>
+                                <div class="text-sm text-gray-300">Sebelum pukul 12:00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Services & Add-ons -->
+                <div class="confirmation-card rounded-2xl p-6">
+                    <h3 class="text-xl font-bold mb-6 flex items-center">
+                        <svg class="w-6 h-6 mr-3 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Layanan Tambahan
+                    </h3>
+                    
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                                <span>Airport Transfer (Pickup & Drop-off)</span>
+                            </div>
+                            <span class="text-yellow-400 font-semibold">Rp 350,000</span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                                <span>Breakfast Package (2 orang x 3 hari)</span>
+                            </div>
+                            <span class="text-yellow-400 font-semibold">Rp 900,000</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 p-4 bg-blue-900/20 border border-blue-500/30 rounded-lg">
+                        <h4 class="font-semibold mb-2 text-blue-400">Permintaan Khusus:</h4>
+                        <p class="text-gray-300">"Mohon kamar di lantai tinggi dengan pemandangan kota. Terima kasih."</p>
+                    </div>
+                </div>
+
+                <!-- Payment Information -->
+                <div class="confirmation-card rounded-2xl p-6">
+                    <h3 class="text-xl font-bold mb-6 flex items-center">
+                        <svg class="w-6 h-6 mr-3 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                        </svg>
+                        Informasi Pembayaran
+                    </h3>
+                    
+                    <div class="info-grid mb-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-sm text-gray-400">Metode Pembayaran</label>
+                                <div class="text-lg">Kartu Kredit</div>
+                                <div class="text-sm text-gray-300">**** **** **** 3456</div>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-400">Status Pembayaran</label>
+                                <div class="text-lg text-green-400 font-semibold">LUNAS</div>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-sm text-gray-400">Referensi Transaksi</label>
+                                <div class="text-lg font-mono">TXN-2024-001234</div>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-400">Waktu Pembayaran</label>
+                                <div class="text-lg" id="payment-time"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Price Breakdown -->
+                    <div class="bg-gray-800/50 rounded-lg p-4">
+                        <h4 class="font-semibold mb-4">Rincian Biaya</h4>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span>Deluxe Room (3 malam)</span>
+                                <span>Rp 3,750,000</span>
+                            </div>
+                            <div class="flex justify-between text-sm text-gray-300">
+                                <span>Airport Transfer</span>
+                                <span>Rp 350,000</span>
+                            </div>
+                            <div class="flex justify-between text-sm text-gray-300">
+                                <span>Breakfast Package</span>
+                                <span>Rp 900,000</span>
+                            </div>
+                            <div class="flex justify-between text-sm text-gray-300">
+                                <span>Pajak & biaya layanan (15%)</span>
+                                <span>Rp 750,000</span>
+                            </div>
+                            <div class="border-t border-gray-600 pt-2 mt-3">
+                                <div class="flex justify-between font-bold text-lg">
+                                    <span>Total Pembayaran</span>
+                                    <span class="text-yellow-400">Rp 5,750,000</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Important Information -->
+                <div class="confirmation-card rounded-2xl p-6">
+                    <h3 class="text-xl font-bold mb-6 flex items-center">
+                        <svg class="w-6 h-6 mr-3 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Informasi Penting
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <span class="text-white text-xs font-bold">1</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Check-in</h4>
+                                <p class="text-gray-300 text-sm">Tunjukkan kode booking dan identitas yang valid saat check-in. Check-in dimulai pukul 14:00.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <span class="text-white text-xs font-bold">2</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Pembatalan</h4>
+                                <p class="text-gray-300 text-sm">Pembatalan gratis hingga 24 jam sebelum check-in. Setelah itu dikenakan biaya 50% dari total pembayaran.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <span class="text-white text-xs font-bold">3</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Kontak Hotel</h4>
+                                <p class="text-gray-300 text-sm">Hubungi hotel di (021) 1234-5678 untuk pertanyaan atau permintaan khusus.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 pt-6">
+                    <button 
+                        onclick="printBooking()" 
+                        class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-4 px-6 rounded-lg transition-colors flex items-center justify-center space-x-2"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                        </svg>
+                        <span>Print Bukti Booking</span>
+                    </button>
+                    
+                    <button 
+                        onclick="shareBooking()" 
+                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors flex items-center justify-center space-x-2"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
+                        </svg>
+                        <span>Bagikan</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set current date and time
+        function setCurrentDateTime() {
+            const now = new Date();
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            
+            const dateStr = now.toLocaleDateString('id-ID', options);
+            const printDateStr = now.toLocaleDateString('id-ID', {
+                year: 'numeric', 
+                month: '2-digit', 
+                day: '2-digit'
+            });
+            
+            document.getElementById('booking-date').textContent = dateStr;
+            document.getElementById('payment-time').textContent = dateStr;
+            document.getElementById('print-date').textContent = printDateStr;
+        }
+
+        // Print booking function
+        function printBooking() {
+            // Show confirmation
+            window.print();
+        }
+
+        // Download PDF function (simulated)
+        function downloadPDF() {
+            // In a real application, this would generate and download a PDF
+            alert('Fitur download PDF akan segera tersedia. Untuk sementara, Anda dapat menggunakan fungsi print dan pilih "Save as PDF".');
+        }
+
+        // Share booking function
+        function shareBooking() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Booking Konfirmasi - LuxStay',
+                    text: 'Booking berhasil! Kode: LX2024001234\nGrand Luxury Hotel\n15-18 Des 2024',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                const bookingInfo = `Booking berhasil! 
+Kode: LX2024001234
+Hotel: Grand Luxury Hotel
+Tanggal: 15-18 Des 2024
+Total: Rp 5,750,000`;
+                
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(bookingInfo).then(() => {
+                        alert('Informasi booking telah disalin ke clipboard!');
+                    });
+                } else {
+                    alert('Informasi booking:\n\n' + bookingInfo);
+                }
+            }
+        }
+
+        // Go to home function
+        function goHome() {
+            if (confirm('Kembali ke beranda?')) {
+                // In a real app: window.location.href = '/';
+                alert('Mengarahkan ke beranda...');
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            setCurrentDateTime();
+            
+            // Add some animation delays for better UX
+            setTimeout(() => {
+                document.querySelector('.success-animation').style.animation = 'successPulse 2s ease-in-out infinite';
+            }, 500);
+        });
+
+        // Print event listener
+        window.addEventListener('beforeprint', function() {
+            document.title = 'Bukti Booking LX2024001234 - LuxStay';
+        });
+
+        window.addEventListener('afterprint', function() {
+            document.title = 'Konfirmasi Booking - LuxStay';
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97530c06251dfd7d',t:'MTc1NjIwODM0OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

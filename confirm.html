@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konfirmasi Booking - LuxStay</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .booking-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .step-indicator {
+            transition: all 0.3s ease;
+        }
+        
+        .step-indicator.active {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #000;
+        }
+        
+        .step-indicator.completed {
+            background: #10b981;
+            color: #fff;
+        }
+        
+        .input-focus {
+            transition: all 0.3s ease;
+        }
+        
+        .input-focus:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(251, 191, 36, 0.2);
+        }
+        
+        .payment-option {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .payment-option:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+        
+        .payment-option.selected {
+            background: rgba(251, 191, 36, 0.1);
+            border-color: #fbbf24;
+        }
+        
+        .room-option {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .room-option:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .room-option.selected {
+            background: rgba(251, 191, 36, 0.1);
+            border-color: #fbbf24;
+        }
+        
+        .price-breakdown {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-black text-white min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-black/80 backdrop-blur-md border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <button onclick="goBack()" class="text-gray-300 hover:text-yellow-400 mr-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                    </button>
+                    <h1 class="text-2xl font-bold gradient-text">LuxStay</h1>
+                </div>
+                <div class="text-sm text-gray-300">
+                    Booking ID: <span class="text-yellow-400 font-mono">#LX2024001</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Progress Steps -->
+        <div class="mb-8">
+            <div class="flex items-center justify-center space-x-4 mb-4">
+                <div class="step-indicator completed w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold">
+                    ✓
+                </div>
+                <div class="w-20 h-1 bg-green-500"></div>
+                <div class="step-indicator active w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold">
+                    2
+                </div>
+                <div class="w-20 h-1 bg-gray-600"></div>
+                <div class="step-indicator w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-sm font-semibold">
+                    3
+                </div>
+            </div>
+            <div class="flex justify-center space-x-8 text-sm">
+                <span class="text-green-400">Pilih Hotel</span>
+                <span class="text-yellow-400 font-medium">Konfirmasi & Pembayaran</span>
+                <span class="text-gray-400">Selesai</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Main Booking Form -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Hotel Summary -->
+                <div class="booking-card rounded-2xl p-6">
+                    <h3 class="text-2xl font-bold mb-4">Detail Pemesanan</h3>
+                    <div class="flex items-start space-x-4">
+                        <div class="w-24 h-24 bg-gradient-to-br from-yellow-500/30 to-orange-500/30 rounded-lg flex items-center justify-center">
+                            <span class="text-3xl">🏨</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-xl font-semibold mb-2">Grand Luxury Hotel</h4>
+                            <p class="text-gray-300 mb-2">📍 Jakarta Pusat</p>
+                            <div class="flex items-center mb-2">
+                                <div class="text-yellow-400 flex">★★★★★</div>
+                                <span class="text-sm text-gray-300 ml-2">(4.9) • 1,247 ulasan</span>
+                            </div>
+                            <div class="flex items-center space-x-4 text-sm text-gray-300">
+                                <span>📅 Check-in: 15 Des 2024</span>
+                                <span>📅 Check-out: 18 Des 2024</span>
+                                <span>👥 2 Tamu</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stay Duration & Room Selection -->
+                <div class="booking-card rounded-2xl p-6">
+                    <h3 class="text-xl font-bold mb-6">Durasi Menginap & Pilihan Kamar</h3>
+                    
+                    <!-- Date Selection -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Check-in</label>
+                            <input 
+                                type="date" 
+                                id="checkin-date"
+                                value="2024-12-15"
+                                class="input-focus w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-yellow-500"
+                                onchange="calculateStayDuration()"
+                            >
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Check-out</label>
+                            <input 
+                                type="date" 
+                                id="checkout-date"
+                                value="2024-12-18"
+                                class="input-focus w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-yellow-500"
+                                onchange="calculateStayDuration()"
+                            >
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Durasi</label>
+                            <div class="px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-yellow-400 font-semibold">
+                                <span id="stay-duration">3 Malam</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Room Type Selection -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-300 mb-4">Pilih Tipe Kamar</label>
+                        <div class="space-y-3">
+                            <div class="room-option selected border border-yellow-500 rounded-lg p-4" onclick="selectRoom(this, 'deluxe', 1250000)">
+                                <div class="flex justify-between items-start">
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold mb-1">Deluxe Room</h4>
+                                        <p class="text-sm text-gray-300 mb-2">32m² • King Bed • City View • WiFi Gratis</p>
+                                        <div class="flex items-center space-x-2 text-xs">
+                                            <span class="bg-gray-700 px-2 py-1 rounded">AC</span>
+                                            <span class="bg-gray-700 px-2 py-1 rounded">Mini Bar</span>
+                                            <span class="bg-gray-700 px-2 py-1 rounded">Safe Box</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-lg font-bold text-yellow-400">Rp 1,250,000</div>
+                                        <div class="text-sm text-gray-400">/malam</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="room-option border border-gray-600 rounded-lg p-4" onclick="selectRoom(this, 'suite', 2100000)">
+                                <div class="flex justify-between items-start">
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold mb-1">Executive Suite</h4>
+                                        <p class="text-sm text-gray-300 mb-2">55m² • King Bed • Ocean View • Lounge Access</p>
+                                        <div class="flex items-center space-x-2 text-xs">
+                                            <span class="bg-gray-700 px-2 py-1 rounded">Jacuzzi</span>
+                                            <span class="bg-gray-700 px-2 py-1 rounded">Butler Service</span>
+                                            <span class="bg-gray-700 px-2 py-1 rounded">Balcony</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-lg font-bold text-yellow-400">Rp 2,100,000</div>
+                                        <div class="text-sm text-gray-400">/malam</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="room-option border border-gray-600 rounded-lg p-4" onclick="selectRoom(this, 'presidential', 4500000)">
+                                <div class="flex justify-between items-start">
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold mb-1">Presidential Suite</h4>
+                                        <p class="text-sm text-gray-300 mb-2">120m² • 2 Bedrooms • Panoramic View • Private Chef</p>
+                                        <div class="flex items-center space-x-2 text-xs">
+                                            <span class="bg-gray-700 px-2 py-1 rounded">Private Pool</span>
+                                            <span class="bg-gray-700 px-2 py-1 rounded">Dining Room</span>
+                                            <span class="bg-gray-700 px-2 py-1 rounded">Meeting Room</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-lg font-bold text-yellow-400">Rp 4,500,000</div>
+                                        <div class="text-sm text-gray-400">/malam</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Guest Information -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Jumlah Tamu Dewasa</label>
+                            <select 
+                                id="adult-guests"
+                                class="input-focus w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-yellow-500"
+                                onchange="updatePricing()"
+                            >
+                                <option value="1">1 Dewasa</option>
+                                <option value="2" selected>2 Dewasa</option>
+                                <option value="3">3 Dewasa</option>
+                                <option value="4">4 Dewasa</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Jumlah Anak</label>
+                            <select 
+                                id="child-guests"
+                                class="input-focus w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-yellow-500"
+                                onchange="updatePricing()"
+                            >
+                                <option value="0" selected>Tidak ada anak</option>
+                                <option value="1">1 Anak</option>
+                                <option value="2">2 Anak</option>
+                                <option value="3">3 Anak</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Guest Identity Confirmation -->
+                <div class="booking-card rounded-2xl p-6">
+                    <h3 class="text-xl font-bold mb-6">Konfirmasi Identitas Tamu</h3>
+                    
+                    <!-- Primary Guest -->
+                    <div class="mb-6">
+                        <h4 class="font-semibold mb-4 text-yellow-400">Tamu Utama (Pemesan)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Nama Lengkap *</label>
+                                <input 
+                                    type="text" 
+                                    id="primary-name"
+                                    placeholder="Sesuai KTP/Paspor"
+                                    class="input-focus w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500"
+                                    required
+                                >
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Email *</label>
+                                <input 
+                                    type="email" 
+                                    id="primary-email"
+                                    placeholder="email@example.com"
+                                    class="input-focus w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500"
+                                    required
+                                >
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Nomor Telepon *</label>
+                                <input 
+                                    type="tel" 
+                                    id="primary-phone"
+                                    placeholder="+62 812 3456 7890"
+                                    class="input-focus w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500"
+                                    required
+                                >
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Jenis Identitas *</label>
+                                <select 
+                                    id="primary-id-type"
+                                    class="input-focus w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-yellow-500"
+                                    required
+                                >
+                                    <option value="">Pilih jenis identitas</option>
+                                    <option value="ktp">KTP</option>
+                                    <option value="passport">Paspor</option>
+                                    <option value="sim">SIM</option>
+                                </select>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Nomor Identitas *</label>
+                                <input 
+                                    type="text" 
+                                    id="primary-id-number"
+                                    placeholder="Masukkan nomor identitas"
+                                    class="input-focus w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500"
+                                    required
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Guests -->
+                    <div id="additional-guests" class="space-y-6">
+                        <!-- Additional guests will be added here dynamically -->
+                    </div>
+
+                    <button 
+                        onclick="addAdditionalGuest()"
+                        class="text-yellow-400 hover:text-yellow-300 text-sm font-medium flex items-center"
+                    >
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Tambah Tamu Lain
+                    </button>
+                </div>
+
+                <!-- Special Requests -->
+                <div class="booking-card rounded-2xl p-6">
+                    <h3 class="text-xl font-bold mb-6">Permintaan Khusus & Add-ons</h3>
+                    
+                    <!-- Special Requests -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Permintaan Khusus</label>
+                        <textarea 
+                            id="special-requests"
+                            rows="3"
+                            placeholder="Contoh: Kamar lantai tinggi, tempat tidur twin, dekat lift, dll."
+                            class="input-focus w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500 resize-none"
+                        ></textarea>
+                        <p class="text-xs text-gray-400 mt-1">*Permintaan khusus akan diusahakan sesuai ketersediaan</p>
+                    </div>
+
+                    <!-- Add-ons -->
+                    <div class="space-y-3">
+                        <h4 class="font-semibold text-gray-300">Layanan Tambahan</h4>
+                        
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="checkbox" class="w-4 h-4 text-yellow-500 bg-gray-800 border-gray-600 rounded focus:ring-yellow-500" onchange="updatePricing()">
+                            <span class="flex-1">Airport Transfer (Pickup & Drop-off)</span>
+                            <span class="text-yellow-400 font-medium">+Rp 350,000</span>
+                        </label>
+                        
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="checkbox" class="w-4 h-4 text-yellow-500 bg-gray-800 border-gray-600 rounded focus:ring-yellow-500" onchange="updatePricing()">
+                            <span class="flex-1">Breakfast Package (per person/day)</span>
+                            <span class="text-yellow-400 font-medium">+Rp 150,000</span>
+                        </label>
+                        
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="checkbox" class="w-4 h-4 text-yellow-500 bg-gray-800 border-gray-600 rounded focus:ring-yellow-500" onchange="updatePricing()">
+                            <span class="flex-1">Spa Package (60 min massage)</span>
+                            <span class="text-yellow-400 font-medium">+Rp 500,000</span>
+                        </label>
+                        
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="checkbox" class="w-4 h-4 text-yellow-500 bg-gray-800 border-gray-600 rounded focus:ring-yellow-500" onchange="updatePricing()">
+                            <span class="flex-1">Late Check-out (sampai 18:00)</span>
+                            <span class="text-yellow-400 font-medium">+Rp 200,000</span>
+                        </label>
+                        
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="checkbox" class="w-4 h-4 text-yellow-500 bg-gray-800 border-gray-600 rounded focus:ring-yellow-500" onchange="updatePricing()">
+                            <span class="flex-1">Room Decoration (Anniversary/Birthday)</span>
+                            <span class="text-yellow-400 font-medium">+Rp 300,000</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Payment Method -->
+                <div class="booking-card rounded-2xl p-6">
+                    <h3 class="text-xl font-bold mb-6">Metode Pembayaran</h3>
+                    
+                    <div class="space-y-3 mb-6">
+                        <!-- Credit Card -->
+                        <div class="payment-option selected border border-yellow-500 rounded-lg p-4" onclick="selectPayment(this, 'credit-card')">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded flex items-center justify-center">
+                                    💳
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="font-semibold">Kartu Kredit/Debit</h4>
+                                    <p class="text-sm text-gray-300">Visa, Mastercard, JCB</p>
+                                </div>
+                                <div class="text-green-400 text-sm">Instant</div>
+                            </div>
+                        </div>
+
+                        <!-- Bank Transfer -->
+                        <div class="payment-option border border-gray-600 rounded-lg p-4" onclick="selectPayment(this, 'bank-transfer')">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-8 bg-gradient-to-r from-green-500 to-teal-500 rounded flex items-center justify-center">
+                                    🏦
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="font-semibold">Transfer Bank</h4>
+                                    <p class="text-sm text-gray-300">BCA, Mandiri, BNI, BRI</p>
+                                </div>
+                                <div class="text-yellow-400 text-sm">1-3 jam</div>
+                            </div>
+                        </div>
+
+                        <!-- E-Wallet -->
+                        <div class="payment-option border border-gray-600 rounded-lg p-4" onclick="selectPayment(this, 'e-wallet')">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-8 bg-gradient-to-r from-pink-500 to-red-500 rounded flex items-center justify-center">
+                                    📱
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="font-semibold">E-Wallet</h4>
+                                    <p class="text-sm text-gray-300">GoPay, OVO, DANA, ShopeePay</p>
+                                </div>
+                                <div class="text-green-400 text-sm">Instant</div>
+                            </div>
+                        </div>
+
+                        <!-- Installment -->
+                        <div class="payment-option border border-gray-600 rounded-lg p-4" onclick="selectPayment(this, 'installment')">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-8 bg-gradient-to-r from-orange-500 to-yellow-500 rounded flex items-center justify-center">
+                                    📊
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="font-semibold">Cicilan 0%</h4>
+                                    <p class="text-sm text-gray-300">3, 6, 12 bulan tanpa bunga</p>
+                                </div>
+                                <div class="text-blue-400 text-sm">Khusus CC</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Form -->
+                    <div id="payment-form">
+                        <!-- Credit Card Form (Default) -->
+                        <div id="credit-card-form" class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Nomor Kartu</label>
+                                <input 
+                                    type="text" 
+                                    placeholder="1234 5678 9012 3456"
+                                    class="input-focus w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500"
+                                    maxlength="19"
+                                    oninput="formatCardNumber(this)"
+                                >
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Berlaku Hingga</label>
+                                    <input 
+                                        type="text" 
+                                        placeholder="MM/YY"
+                                        class="input-focus w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500"
+                                        maxlength="5"
+                                        oninput="formatExpiry(this)"
+                                    >
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">CVV</label>
+                                    <input 
+                                        type="text" 
+                                        placeholder="123"
+                                        class="input-focus w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500"
+                                        maxlength="4"
+                                    >
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Nama Pemegang Kartu</label>
+                                <input 
+                                    type="text" 
+                                    placeholder="Sesuai yang tertera di kartu"
+                                    class="input-focus w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Booking Summary -->
+            <div class="lg:col-span-1">
+                <div class="booking-card rounded-2xl p-6 sticky top-8">
+                    <h3 class="text-xl font-bold mb-6">Ringkasan Pemesanan</h3>
+                    
+                    <!-- Hotel Info -->
+                    <div class="mb-6 pb-6 border-b border-gray-700">
+                        <h4 class="font-semibold mb-2">Grand Luxury Hotel</h4>
+                        <p class="text-sm text-gray-300 mb-2">Deluxe Room • 3 Malam</p>
+                        <p class="text-sm text-gray-300">15 Des - 18 Des 2024</p>
+                        <p class="text-sm text-gray-300">2 Tamu Dewasa</p>
+                    </div>
+
+                    <!-- Price Breakdown -->
+                    <div class="price-breakdown rounded-lg p-4 mb-6">
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span>Harga kamar (3 malam)</span>
+                                <span id="room-total">Rp 3,750,000</span>
+                            </div>
+                            <div class="flex justify-between text-sm text-gray-300">
+                                <span>Pajak & biaya layanan</span>
+                                <span id="tax-total">Rp 562,500</span>
+                            </div>
+                            <div id="addons-breakdown" class="space-y-2">
+                                <!-- Add-ons will be added here dynamically -->
+                            </div>
+                            <div class="border-t border-gray-600 pt-3">
+                                <div class="flex justify-between font-semibold text-lg">
+                                    <span>Total Pembayaran</span>
+                                    <span id="grand-total" class="text-yellow-400">Rp 4,312,500</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Promo Code -->
+                    <div class="mb-6">
+                        <div class="flex space-x-2">
+                            <input 
+                                type="text" 
+                                id="promo-code"
+                                placeholder="Kode promo"
+                                class="flex-1 px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500 text-sm"
+                            >
+                            <button 
+                                onclick="applyPromo()"
+                                class="bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 rounded-lg font-medium text-sm transition-colors"
+                            >
+                                Terapkan
+                            </button>
+                        </div>
+                        <div id="promo-message" class="mt-2 text-sm hidden"></div>
+                    </div>
+
+                    <!-- Terms and Conditions -->
+                    <div class="mb-6">
+                        <label class="flex items-start space-x-3 cursor-pointer">
+                            <input type="checkbox" id="terms-agreement" class="w-4 h-4 text-yellow-500 bg-gray-800 border-gray-600 rounded focus:ring-yellow-500 mt-1">
+                            <span class="text-sm text-gray-300">
+                                Saya setuju dengan 
+                                <a href="#" class="text-yellow-400 hover:text-yellow-300">Syarat & Ketentuan</a>, 
+                                <a href="#" class="text-yellow-400 hover:text-yellow-300">Kebijakan Pembatalan</a>, dan 
+                                <a href="#" class="text-yellow-400 hover:text-yellow-300">Kebijakan Privasi</a>
+                            </span>
+                        </label>
+                    </div>
+
+                    <!-- Book Now Button -->
+                    <button 
+                        onclick="processBooking()"
+                        class="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-4 rounded-lg transition-colors text-lg transform hover:scale-105"
+                    >
+                        Konfirmasi & Bayar
+                    </button>
+
+                    <!-- Security Notice -->
+                    <div class="mt-4 text-center">
+                        <p class="text-xs text-gray-400">
+                            🔒 Pembayaran aman dengan enkripsi SSL 256-bit
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedRoom = { type: 'deluxe', price: 1250000 };
+        let selectedPayment = 'credit-card';
+        let additionalGuestCount = 0;
+
+        // Calculate stay duration
+        function calculateStayDuration() {
+            const checkin = new Date(document.getElementById('checkin-date').value);
+            const checkout = new Date(document.getElementById('checkout-date').value);
+            
+            if (checkin && checkout && checkout > checkin) {
+                const diffTime = Math.abs(checkout - checkin);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                document.getElementById('stay-duration').textContent = `${diffDays} Malam`;
+                updatePricing();
+            }
+        }
+
+        // Select room type
+        function selectRoom(element, roomType, price) {
+            document.querySelectorAll('.room-option').forEach(option => {
+                option.classList.remove('selected', 'border-yellow-500');
+                option.classList.add('border-gray-600');
+            });
+            
+            element.classList.add('selected', 'border-yellow-500');
+            element.classList.remove('border-gray-600');
+            
+            selectedRoom = { type: roomType, price: price };
+            updatePricing();
+        }
+
+        // Select payment method
+        function selectPayment(element, paymentType) {
+            document.querySelectorAll('.payment-option').forEach(option => {
+                option.classList.remove('selected', 'border-yellow-500');
+                option.classList.add('border-gray-600');
+            });
+            
+            element.classList.add('selected', 'border-yellow-500');
+            element.classList.remove('border-gray-600');
+            
+            selectedPayment = paymentType;
+            updatePaymentForm(paymentType);
+        }
+
+        // Update payment form based on selected method
+        function updatePaymentForm(paymentType) {
+            const paymentForm = document.getElementById('payment-form');
+            
+            switch(paymentType) {
+                case 'credit-card':
+                    paymentForm.innerHTML = `
+                        <div id="credit-card-form" class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Nomor Kartu</label>
+                                <input type="text" placeholder="1234 5678 9012 3456" class="input-focus w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500" maxlength="19" oninput="formatCardNumber(this)">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Berlaku Hingga</label>
+                                    <input type="text" placeholder="MM/YY" class="input-focus w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500" maxlength="5" oninput="formatExpiry(this)">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">CVV</label>
+                                    <input type="text" placeholder="123" class="input-focus w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500" maxlength="4">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Nama Pemegang Kartu</label>
+                                <input type="text" placeholder="Sesuai yang tertera di kartu" class="input-focus w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500">
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'bank-transfer':
+                    paymentForm.innerHTML = `
+                        <div class="space-y-4">
+                            <p class="text-sm text-gray-300">Pilih bank untuk transfer:</p>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button class="p-3 border border-gray-600 rounded-lg hover:border-yellow-500 transition-colors">
+                                    <div class="font-semibold">BCA</div>
+                                    <div class="text-xs text-gray-400">Virtual Account</div>
+                                </button>
+                                <button class="p-3 border border-gray-600 rounded-lg hover:border-yellow-500 transition-colors">
+                                    <div class="font-semibold">Mandiri</div>
+                                    <div class="text-xs text-gray-400">Virtual Account</div>
+                                </button>
+                                <button class="p-3 border border-gray-600 rounded-lg hover:border-yellow-500 transition-colors">
+                                    <div class="font-semibold">BNI</div>
+                                    <div class="text-xs text-gray-400">Virtual Account</div>
+                                </button>
+                                <button class="p-3 border border-gray-600 rounded-lg hover:border-yellow-500 transition-colors">
+                                    <div class="font-semibold">BRI</div>
+                                    <div class="text-xs text-gray-400">Virtual Account</div>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'e-wallet':
+                    paymentForm.innerHTML = `
+                        <div class="space-y-4">
+                            <p class="text-sm text-gray-300">Pilih e-wallet:</p>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button class="p-3 border border-gray-600 rounded-lg hover:border-yellow-500 transition-colors">
+                                    <div class="font-semibold">GoPay</div>
+                                    <div class="text-xs text-gray-400">Scan QR Code</div>
+                                </button>
+                                <button class="p-3 border border-gray-600 rounded-lg hover:border-yellow-500 transition-colors">
+                                    <div class="font-semibold">OVO</div>
+                                    <div class="text-xs text-gray-400">Scan QR Code</div>
+                                </button>
+                                <button class="p-3 border border-gray-600 rounded-lg hover:border-yellow-500 transition-colors">
+                                    <div class="font-semibold">DANA</div>
+                                    <div class="text-xs text-gray-400">Scan QR Code</div>
+                                </button>
+                                <button class="p-3 border border-gray-600 rounded-lg hover:border-yellow-500 transition-colors">
+                                    <div class="font-semibold">ShopeePay</div>
+                                    <div class="text-xs text-gray-400">Scan QR Code</div>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'installment':
+                    paymentForm.innerHTML = `
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Pilih Tenor Cicilan</label>
+                                <select class="input-focus w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-yellow-500">
+                                    <option value="3">3 Bulan (0% bunga)</option>
+                                    <option value="6">6 Bulan (0% bunga)</option>
+                                    <option value="12">12 Bulan (0% bunga)</option>
+                                </select>
+                            </div>
+                            <div class="bg-gray-800/50 p-4 rounded-lg">
+                                <div class="text-sm text-gray-300 mb-2">Cicilan per bulan:</div>
+                                <div class="text-xl font-bold text-yellow-400">Rp 1,437,500</div>
+                                <div class="text-xs text-gray-400 mt-1">*Untuk tenor 3 bulan</div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+        }
+
+        // Add additional guest
+        function addAdditionalGuest() {
+            additionalGuestCount++;
+            const additionalGuestsContainer = document.getElementById('additional-guests');
+            
+            const guestForm = document.createElement('div');
+            guestForm.className = 'border-t border-gray-700 pt-6';
+            guestForm.innerHTML = `
+                <div class="flex justify-between items-center mb-4">
+                    <h4 class="font-semibold text-gray-300">Tamu Tambahan ${additionalGuestCount}</h4>
+                    <button onclick="removeAdditionalGuest(this)" class="text-red-400 hover:text-red-300 text-sm">
+                        Hapus
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Nama Lengkap</label>
+                        <input type="text" placeholder="Sesuai KTP/Paspor" class="input-focus w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Jenis Identitas</label>
+                        <select class="input-focus w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-yellow-500">
+                            <option value="">Pilih jenis identitas</option>
+                            <option value="ktp">KTP</option>
+                            <option value="passport">Paspor</option>
+                            <option value="sim">SIM</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Nomor Identitas</label>
+                        <input type="text" placeholder="Masukkan nomor identitas" class="input-focus w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500">
+                    </div>
+                </div>
+            `;
+            
+            additionalGuestsContainer.appendChild(guestForm);
+        }
+
+        // Remove additional guest
+        function removeAdditionalGuest(button) {
+            button.closest('.border-t').remove();
+            additionalGuestCount--;
+        }
+
+        // Update pricing
+        function updatePricing() {
+            const stayDurationText = document.getElementById('stay-duration').textContent;
+            const nights = parseInt(stayDurationText.split(' ')[0]) || 3;
+            
+            const roomTotal = selectedRoom.price * nights;
+            const taxTotal = roomTotal * 0.15; // 15% tax
+            
+            // Calculate add-ons
+            let addonsTotal = 0;
+            const addonsBreakdown = document.getElementById('addons-breakdown');
+            addonsBreakdown.innerHTML = '';
+            
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#terms-agreement)');
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    const label = checkbox.closest('label');
+                    const priceText = label.querySelector('.text-yellow-400').textContent;
+                    const price = parseInt(priceText.replace(/\D/g, ''));
+                    const serviceName = label.querySelector('span:first-of-type').textContent;
+                    
+                    addonsTotal += price;
+                    
+                    const addonDiv = document.createElement('div');
+                    addonDiv.className = 'flex justify-between text-sm text-gray-300';
+                    addonDiv.innerHTML = `
+                        <span>${serviceName}</span>
+                        <span>+${priceText}</span>
+                    `;
+                    addonsBreakdown.appendChild(addonDiv);
+                }
+            });
+            
+            const grandTotal = roomTotal + taxTotal + addonsTotal;
+            
+            // Update display
+            document.getElementById('room-total').textContent = `Rp ${roomTotal.toLocaleString('id-ID')}`;
+            document.getElementById('tax-total').textContent = `Rp ${taxTotal.toLocaleString('id-ID')}`;
+            document.getElementById('grand-total').textContent = `Rp ${grandTotal.toLocaleString('id-ID')}`;
+        }
+
+        // Apply promo code
+        function applyPromo() {
+            const promoCode = document.getElementById('promo-code').value.toUpperCase();
+            const promoMessage = document.getElementById('promo-message');
+            
+            const validPromos = {
+                'WELCOME10': { discount: 0.1, message: 'Diskon 10% berhasil diterapkan!' },
+                'LUXURY20': { discount: 0.2, message: 'Diskon 20% untuk hotel mewah berhasil diterapkan!' },
+                'FIRSTBOOK': { discount: 0.15, message: 'Diskon 15% untuk pemesanan pertama berhasil diterapkan!' }
+            };
+            
+            if (validPromos[promoCode]) {
+                const promo = validPromos[promoCode];
+                promoMessage.textContent = promo.message;
+                promoMessage.className = 'mt-2 text-sm text-green-400 block';
+                
+                // Apply discount (simplified - in real app would update pricing)
+                setTimeout(() => {
+                    alert(`Promo berhasil! Anda mendapat diskon ${promo.discount * 100}%`);
+                }, 500);
+            } else {
+                promoMessage.textContent = 'Kode promo tidak valid atau sudah kadaluarsa';
+                promoMessage.className = 'mt-2 text-sm text-red-400 block';
+            }
+        }
+
+        // Format card number
+        function formatCardNumber(input) {
+            let value = input.value.replace(/\D/g, '');
+            value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+            input.value = value;
+        }
+
+        // Format expiry date
+        function formatExpiry(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            input.value = value;
+        }
+
+        // Process booking
+        function processBooking() {
+            const termsAgreed = document.getElementById('terms-agreement').checked;
+            
+            if (!termsAgreed) {
+                alert('Mohon setujui syarat dan ketentuan untuk melanjutkan pemesanan.');
+                return;
+            }
+            
+            // Validate required fields
+            const primaryName = document.getElementById('primary-name').value;
+            const primaryEmail = document.getElementById('primary-email').value;
+            const primaryPhone = document.getElementById('primary-phone').value;
+            const primaryIdType = document.getElementById('primary-id-type').value;
+            const primaryIdNumber = document.getElementById('primary-id-number').value;
+            
+            if (!primaryName || !primaryEmail || !primaryPhone || !primaryIdType || !primaryIdNumber) {
+                alert('Mohon lengkapi semua data identitas tamu utama.');
+                return;
+            }
+            
+            // Simulate booking process
+            const button = event.target;
+            const originalText = button.textContent;
+            
+            button.textContent = 'Memproses...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                alert('Pemesanan berhasil! Anda akan menerima konfirmasi via email dan SMS.');
+                button.textContent = originalText;
+                button.disabled = false;
+                
+                // In a real app, redirect to confirmation page
+                // window.location.href = '/booking-confirmation';
+            }, 3000);
+        }
+
+        window.addEventListener("beforeunload", function (e) {
+            e.preventDefault();
+            e.returnValue = "";
+            return "";
+        });
+
+        // Go back function
+        function goBack() {
+            if (confirm('Yakin ingin kembali? Data yang sudah diisi akan hilang.')) {
+                // In a real app: window.history.back();
+                alert('Kembali ke halaman sebelumnya...');
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            calculateStayDuration();
+            updatePricing();
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9752de9e1081fd79',t:'MTc1NjIwNjQ4OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar - LuxStay</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .register-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .input-focus {
+            transition: all 0.3s ease;
+        }
+        
+        .input-focus:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(251, 191, 36, 0.2);
+        }
+        
+        .social-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .social-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .shape:nth-child(1) {
+            top: 15%;
+            left: 15%;
+            animation-delay: 0s;
+        }
+        
+        .shape:nth-child(2) {
+            top: 70%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+        
+        .shape:nth-child(3) {
+            bottom: 15%;
+            left: 25%;
+            animation-delay: 4s;
+        }
+        
+        .shape:nth-child(4) {
+            top: 40%;
+            right: 30%;
+            animation-delay: 1s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .password-strength {
+            height: 4px;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        .strength-weak { background: #ef4444; width: 25%; }
+        .strength-fair { background: #f59e0b; width: 50%; }
+        .strength-good { background: #10b981; width: 75%; }
+        .strength-strong { background: #059669; width: 100%; }
+    </style>
+</head>
+<body class="bg-black text-white min-h-screen flex items-center justify-center relative py-8">
+    <video class="fixed inset-0 w-full h-full object-cover -z-[1]" src="https://videos.pexels.com/video-files/3116716/3116716-hd_1920_1080_25fps.mp4" autoplay loop muted>
+      <source src="https://videos.pexels.com/video-files/3116716/3116716-hd_1920_1080_25fps.mp4">
+    </video>
+
+    <!-- Floating Background Shapes -->
+    <div class="floating-shapes">
+        <div class="shape w-32 h-32 bg-yellow-500 rounded-full"></div>
+        <div class="shape w-24 h-24 bg-yellow-400 rounded-full"></div>
+        <div class="shape w-40 h-40 bg-yellow-600 rounded-full"></div>
+        <div class="shape w-28 h-28 bg-yellow-300 rounded-full"></div>
+    </div>
+    
+    <!-- Background Gradient -->
+    <div class="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-transparent"></div>
+    
+    <!-- Register Container -->
+    <div class="relative z-10 w-full max-w-md mx-4">
+        <!-- Register Card -->
+        <div class="register-card rounded-2xl p-8">
+            <!-- Logo and Title -->
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold gradient-text mb-2">LuxStay</h1>
+                <h2 class="text-2xl font-semibold mb-2">Bergabung dengan Kami</h2>
+                <p class="text-gray-300">Buat akun baru untuk memulai petualangan Anda</p>
+            </div>
+            
+            <!-- Register Form -->
+            <form class="space-y-6" onsubmit="handleRegister(event)">
+                <!-- Full Name Field -->
+                <div>
+                    <label for="fullName" class="block text-sm font-medium text-gray-300 mb-2">Nama Lengkap</label>
+                    <input 
+                        type="text" 
+                        id="fullName" 
+                        name="fullName"
+                        required
+                        placeholder="Masukkan nama lengkap Anda"
+                        class="input-focus w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500"
+                    >
+                </div>
+                
+                <!-- Email Field -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email"
+                        required
+                        placeholder="Masukkan email Anda"
+                        class="input-focus w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500"
+                        onblur="validateEmail(this)"
+                    >
+                    <div id="email-feedback" class="mt-1 text-sm hidden"></div>
+                </div>
+                
+                <!-- Phone Number Field -->
+                <div>
+                    <label for="phone" class="block text-sm font-medium text-gray-300 mb-2">Nomor Telepon</label>
+                    <input 
+                        type="tel" 
+                        id="phone" 
+                        name="phone"
+                        required
+                        placeholder="Contoh: 08123456789"
+                        class="input-focus w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500"
+                        onblur="validatePhone(this)"
+                    >
+                    <div id="phone-feedback" class="mt-1 text-sm hidden"></div>
+                </div>
+                
+                <!-- Password Field -->
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-300 mb-2">Password</label>
+                    <div class="relative">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password"
+                            required
+                            placeholder="Buat password yang kuat"
+                            class="input-focus w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500 pr-12"
+                            oninput="checkPasswordStrength(this)"
+                        >
+                        <button 
+                            type="button" 
+                            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-yellow-500 transition-colors"
+                            onclick="togglePassword('password')"
+                        >
+                            <svg id="eye-icon-password" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <!-- Password Strength Indicator -->
+                    <div class="mt-2">
+                        <div class="bg-gray-700 h-1 rounded-full">
+                            <div id="password-strength" class="password-strength bg-gray-700"></div>
+                        </div>
+                        <p id="password-text" class="text-xs text-gray-400 mt-1">Password harus minimal 8 karakter</p>
+                    </div>
+                </div>
+                
+                <!-- Confirm Password Field -->
+                <div>
+                    <label for="confirmPassword" class="block text-sm font-medium text-gray-300 mb-2">Konfirmasi Password</label>
+                    <div class="relative">
+                        <input 
+                            type="password" 
+                            id="confirmPassword" 
+                            name="confirmPassword"
+                            required
+                            placeholder="Ulangi password Anda"
+                            class="input-focus w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500 pr-12"
+                            onblur="validatePasswordMatch()"
+                        >
+                        <button 
+                            type="button" 
+                            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-yellow-500 transition-colors"
+                            onclick="togglePassword('confirmPassword')"
+                        >
+                            <svg id="eye-icon-confirm" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="confirm-password-feedback" class="mt-1 text-sm hidden"></div>
+                </div>
+                
+                <!-- Terms and Conditions -->
+                <div class="flex items-start">
+                    <input 
+                        type="checkbox" 
+                        id="terms" 
+                        name="terms"
+                        required
+                        class="w-4 h-4 text-yellow-500 bg-gray-800 border-gray-600 rounded focus:ring-yellow-500 focus:ring-2 mt-1"
+                    >
+                    <label for="terms" class="ml-3 text-sm text-gray-300">
+                        Saya setuju dengan 
+                        <a href="#" class="text-yellow-500 hover:text-yellow-400 transition-colors" onclick="showTerms()">Syarat & Ketentuan</a> 
+                        dan 
+                        <a href="#" class="text-yellow-500 hover:text-yellow-400 transition-colors" onclick="showPrivacy()">Kebijakan Privasi</a>
+                    </label>
+                </div>
+                
+                <!-- Newsletter Subscription -->
+                <div class="flex items-start">
+                    <input 
+                        type="checkbox" 
+                        id="newsletter" 
+                        name="newsletter"
+                        class="w-4 h-4 text-yellow-500 bg-gray-800 border-gray-600 rounded focus:ring-yellow-500 focus:ring-2 mt-1"
+                    >
+                    <label for="newsletter" class="ml-3 text-sm text-gray-300">
+                        Saya ingin menerima penawaran khusus dan update terbaru via email
+                    </label>
+                </div>
+                
+                <!-- Register Button -->
+                <button 
+                    type="submit"
+                    class="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-3 rounded-lg transition-all duration-300 transform hover:scale-105"
+                >
+                    Buat Akun
+                </button>
+            </form>
+            
+            <!-- Divider -->
+            <div class="my-6 flex items-center">
+                <div class="flex-1 border-t border-gray-700"></div>
+                <span class="px-4 text-gray-400 text-sm">atau</span>
+                <div class="flex-1 border-t border-gray-700"></div>
+            </div>
+            
+            <!-- Social Register -->
+            <div class="space-y-3">
+                <button class="social-btn w-full bg-gray-800/50 hover:bg-gray-700/50 border border-gray-700 text-white py-3 rounded-lg flex items-center justify-center transition-all" onclick="socialRegister('google')">
+                    <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Daftar dengan Google
+                </button>
+                
+                <button class="social-btn w-full bg-gray-800/50 hover:bg-gray-700/50 border border-gray-700 text-white py-3 rounded-lg flex items-center justify-center transition-all" onclick="socialRegister('facebook')">
+                    <svg class="w-5 h-5 mr-3" fill="#1877F2" viewBox="0 0 24 24">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                    Daftar dengan Facebook
+                </button>
+            </div>
+            
+            <!-- Login Link -->
+            <div class="mt-8 text-center">
+                <p class="text-gray-300">
+                    Sudah punya akun? 
+                    <a href="./index.html" class="text-yellow-500 hover:text-yellow-400 font-medium transition-colors">
+                        Masuk di sini
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        function togglePassword(fieldId) {
+            const passwordInput = document.getElementById(fieldId);
+            const eyeIcon = document.getElementById(`eye-icon-${fieldId === 'confirmPassword' ? 'confirm' : 'password'}`);
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
+                `;
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                `;
+            }
+        }
+        
+        // Check password strength
+        function checkPasswordStrength(input) {
+            const password = input.value;
+            const strengthBar = document.getElementById('password-strength');
+            const strengthText = document.getElementById('password-text');
+            
+            let strength = 0;
+            let feedback = '';
+            
+            if (password.length >= 8) strength++;
+            if (password.match(/[a-z]/)) strength++;
+            if (password.match(/[A-Z]/)) strength++;
+            if (password.match(/[0-9]/)) strength++;
+            if (password.match(/[^a-zA-Z0-9]/)) strength++;
+            
+            strengthBar.className = 'password-strength';
+            
+            switch (strength) {
+                case 0:
+                case 1:
+                    strengthBar.classList.add('strength-weak');
+                    feedback = 'Password terlalu lemah';
+                    break;
+                case 2:
+                    strengthBar.classList.add('strength-fair');
+                    feedback = 'Password cukup';
+                    break;
+                case 3:
+                case 4:
+                    strengthBar.classList.add('strength-good');
+                    feedback = 'Password baik';
+                    break;
+                case 5:
+                    strengthBar.classList.add('strength-strong');
+                    feedback = 'Password sangat kuat';
+                    break;
+            }
+            
+            strengthText.textContent = feedback;
+            strengthText.className = `text-xs mt-1 ${strength <= 1 ? 'text-red-400' : strength <= 2 ? 'text-yellow-400' : 'text-green-400'}`;
+        }
+        
+        // Validate email format
+        function validateEmail(input) {
+            const email = input.value;
+            const feedback = document.getElementById('email-feedback');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (email && !emailRegex.test(email)) {
+                feedback.textContent = 'Format email tidak valid';
+                feedback.className = 'mt-1 text-sm text-red-400 block';
+                input.classList.add('border-red-500');
+            } else {
+                feedback.className = 'mt-1 text-sm hidden';
+                input.classList.remove('border-red-500');
+            }
+        }
+        
+        // Validate phone number
+        function validatePhone(input) {
+            const phone = input.value;
+            const feedback = document.getElementById('phone-feedback');
+            const phoneRegex = /^(\+62|62|0)[0-9]{9,13}$/;
+            
+            if (phone && !phoneRegex.test(phone)) {
+                feedback.textContent = 'Format nomor telepon tidak valid';
+                feedback.className = 'mt-1 text-sm text-red-400 block';
+                input.classList.add('border-red-500');
+            } else {
+                feedback.className = 'mt-1 text-sm hidden';
+                input.classList.remove('border-red-500');
+            }
+        }
+        
+        // Validate password match
+        function validatePasswordMatch() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const feedback = document.getElementById('confirm-password-feedback');
+            const confirmInput = document.getElementById('confirmPassword');
+            
+            if (confirmPassword && password !== confirmPassword) {
+                feedback.textContent = 'Password tidak cocok';
+                feedback.className = 'mt-1 text-sm text-red-400 block';
+                confirmInput.classList.add('border-red-500');
+            } else {
+                feedback.className = 'mt-1 text-sm hidden';
+                confirmInput.classList.remove('border-red-500');
+            }
+        }
+        
+        // Handle register form submission
+        function handleRegister(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);
+            
+            // Validation
+            if (!data.fullName || !data.email || !data.phone || !data.password || !data.confirmPassword) {
+                alert('Mohon lengkapi semua field yang wajib diisi!');
+                return;
+            }
+            
+            if (data.password !== data.confirmPassword) {
+                alert('Password dan konfirmasi password tidak cocok!');
+                return;
+            }
+            
+            if (!data.terms) {
+                alert('Anda harus menyetujui Syarat & Ketentuan untuk melanjutkan!');
+                return;
+            }
+            
+            // Simulate registration process
+            const button = event.target.querySelector('button[type="submit"]');
+            const originalText = button.textContent;
+            
+            button.textContent = 'Membuat Akun...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                alert(`Selamat ${data.fullName}! Akun Anda berhasil dibuat. Silakan cek email untuk verifikasi.`);
+                button.textContent = originalText;
+                button.disabled = false;
+                
+                // In a real app, you would redirect to verification page
+                // window.location.href = '/verify-email';
+            }, 2000);
+        }
+        
+        // Social registration handlers
+        function socialRegister(provider) {
+            alert(`Pendaftaran dengan ${provider} akan segera tersedia!`);
+        }
+        
+        // Navigation functions
+        function goBack() {
+            alert('Kembali ke halaman utama...');
+            // In a real app: window.history.back() or window.location.href = '/';
+        }
+        
+        function showTerms() {
+            alert('Halaman Syarat & Ketentuan akan ditampilkan dalam popup atau halaman baru.');
+        }
+        
+        function showPrivacy() {
+            alert('Halaman Kebijakan Privasi akan ditampilkan dalam popup atau halaman baru.');
+        }
+        
+        // Add floating animation to input fields
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-2px)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Real-time password confirmation validation
+        document.getElementById('confirmPassword').addEventListener('input', validatePasswordMatch);
+        
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            // Escape key to go back
+            if (event.key === 'Escape') {
+                goBack();
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9752bcd242b7fd13',t:'MTc1NjIwNTEwNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
