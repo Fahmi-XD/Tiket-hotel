@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Konfirmasi Booking - LuxStay</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
@@ -610,6 +610,7 @@
         let selectedRoom = { type: 'deluxe', price: 1250000 };
         let selectedPayment = 'credit-card';
         let additionalGuestCount = 0;
+        let isBooking = false;
 
         // Calculate stay duration
         function calculateStayDuration() {
@@ -908,20 +909,24 @@
             button.textContent = 'Memproses...';
             button.disabled = true;
             
+            isBooking = true;
+            
             setTimeout(() => {
                 alert('Pemesanan berhasil! Anda akan menerima konfirmasi via email dan SMS.');
                 button.textContent = originalText;
                 button.disabled = false;
                 
                 // In a real app, redirect to confirmation page
-                // window.location.href = '/booking-confirmation';
+                window.location.href = '/code.html';
             }, 3000);
         }
 
         window.addEventListener("beforeunload", function (e) {
-            e.preventDefault();
-            e.returnValue = "";
-            return "";
+            if (!isBooking) {
+                e.preventDefault();
+                e.returnValue = "";
+                return "";
+            }
         });
 
         // Go back function

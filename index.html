@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Masuk - LuxStay</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
@@ -243,12 +243,12 @@
             button.disabled = true;
             
             setTimeout(() => {
-                alert(`Selamat datang! Login berhasil untuk ${email}`);
+                // alert(`Selamat datang! Login berhasil untuk ${email}`);
                 button.textContent = originalText;
                 button.disabled = false;
                 
                 // In a real app, you would redirect to dashboard
-                // window.location.href = '/dashboard';
+                window.location.href = '/home.html';
             }, 2000);
         }
         

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Discover Hotels - LuxStay</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
@@ -531,9 +531,9 @@
         
         // Book hotel functionality
         function bookHotel(hotelName) {
-            alert(`Memproses pemesanan untuk ${hotelName}. Anda akan diarahkan ke halaman pembayaran.`);
+            // alert(`Memproses pemesanan untuk ${hotelName}. Anda akan diarahkan ke halaman pembayaran.`);
             // In a real app, this would redirect to booking page
-            // window.location.href = `/book/${hotelName}`;
+            window.location.href = `/confirm.html`;
         }
         
         // Load more hotels
